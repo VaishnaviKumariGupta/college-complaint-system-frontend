@@ -48,7 +48,7 @@ function StudentProfile() {
         payload.currentPassword = formData.currentPassword;
         payload.newPassword = formData.newPassword;
       }
-      await axios.put(' ${import.meta.env.VITE_API_URL}/api/users/profile', payload, config);
+      await axios.put(`${import.meta.env.VITE_API_URL}/api/users/profile`, payload, config);
       setSuccess('Profile updated successfully!');
       setFormData(prev => ({ ...prev, currentPassword: '', newPassword: '', confirmPassword: '' }));
     } catch (err) {

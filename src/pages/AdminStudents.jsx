@@ -22,14 +22,14 @@ function AdminStudents() {
       const config = { headers: { Authorization: `Bearer ${user.token}` } };
 
       // Complaints fetch karo (ye guaranteed kaam karta hai)
-      const complaintsRes = await axios.get(' ${import.meta.env.VITE_API_URL}/api/complaints/all', config);
+      const complaintsRes = await axios.get(`${import.meta.env.VITE_API_URL}/api/complaints/all`, config);
       const complaintsList = complaintsRes.data.message ? [] : complaintsRes.data;
       setComplaints(complaintsList);
 
       // Students fetch karo — 2 tarike try karte hain
       try {
         // Pehle dedicated route try karo
-        const usersRes = await axios.get(' ${import.meta.env.VITE_API_URL}/api/users/students', config);
+        const usersRes = await axios.get(`${import.meta.env.VITE_API_URL}/api/users/students`, config);
         const studentsList = usersRes.data.message ? [] : usersRes.data;
         setStudents(studentsList);
       } catch (studentErr) {

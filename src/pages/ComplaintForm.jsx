@@ -40,7 +40,7 @@ function ComplaintForm() {
     setLoading(true);
     try {
       const config = { headers: { Authorization: `Bearer ${user.token}` } };
-      await axios.post(' ${import.meta.env.VITE_API_URL}/api/complaints', formData, config);
+      await axios.post(`${import.meta.env.VITE_API_URL}/api/complaints`, formData, config);
       setSuccess('Complaint submitted successfully!');
       setFormData({ title: '', category: '', department: '', description: '' });
       setTimeout(() => navigate('/student/complaints'), 1500);

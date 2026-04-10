@@ -23,7 +23,7 @@ function AdminComplaints() {
   const fetchComplaints = async () => {
     try {
       const config = { headers: { Authorization: `Bearer ${user.token}` } };
-      const { data } = await axios.get(' ${import.meta.env.VITE_API_URL}/api/complaints/all', config);
+      const { data } = await axios.get(`${import.meta.env.VITE_API_URL}/api/complaints/all`, config);
       const list = data.message ? [] : data;
       setComplaints(list);
       setFiltered(list);

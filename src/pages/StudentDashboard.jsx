@@ -30,7 +30,7 @@ function StudentDashboard() {
         }
       };
 
-      const { data } = await axios.get(' ${import.meta.env.VITE_API_URL}/api/complaints/my', config);
+      const { data } = await axios.get(`${import.meta.env.VITE_API_URL}/api/complaints/my`, config);
       
       const complaints = data.message ? [] : data;
 

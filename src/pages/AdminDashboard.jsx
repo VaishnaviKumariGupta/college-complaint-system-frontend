@@ -30,7 +30,7 @@ function AdminDashboard() {
         }
       };
 
-      const { data } = await axios.get(' ${import.meta.env.VITE_API_URL}/api/complaints/all', config);
+      const { data } = await axios.get(`${import.meta.env.VITE_API_URL}/api/complaints/all`, config);
       
       const complaints = data.message ? [] : data;
 

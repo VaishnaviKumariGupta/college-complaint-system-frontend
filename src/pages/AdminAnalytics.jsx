@@ -16,7 +16,7 @@ function AdminAnalytics() {
   const fetchData = async () => {
     try {
       const config = { headers: { Authorization: `Bearer ${user.token}` } };
-      const { data } = await axios.get(' ${import.meta.env.VITE_API_URL}/api/complaints/all', config);
+      const { data } = await axios.get(`${import.meta.env.VITE_API_URL}/api/complaints/all`, config);
       setComplaints(data.message ? [] : data);
     } catch (err) { console.error(err); }
     setLoading(false);

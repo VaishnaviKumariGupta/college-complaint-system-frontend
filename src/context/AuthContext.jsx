@@ -31,12 +31,12 @@ export const AuthProvider = ({ children }) => {
       // Save user data and token
       localStorage.setItem('user', JSON.stringify(data));
       setUser(data);
-      
-      return { success: true, role:data.role };
+
+      return { success: true, role: data.role };
     } catch (error) {
-      return { 
-        success: false, 
-        message: error.response?.data?.message || 'Registration failed' 
+      return {
+        success: false,
+        message: error.response?.data?.message || 'Registration failed'
       };
     }
   };
@@ -53,9 +53,9 @@ export const AuthProvider = ({ children }) => {
       setUser(data);
       return { success: true, role: data.role };
     } catch (error) {
-      return { 
-        success: false, 
-        message: error.response?.data?.message || 'Login failed' 
+      return {
+        success: false,
+        message: error.response?.data?.message || 'Login failed'
       };
     }
   };

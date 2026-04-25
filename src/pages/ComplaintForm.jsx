@@ -15,6 +15,9 @@ function ComplaintForm() {
     department: '',
     description: ''
   });
+
+  const [photo, setPhoto] = useState(null);
+  const [photoPreview, setPhotoPreview] = useState(null);
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
   const [loading, setLoading] = useState(false);
@@ -26,6 +29,30 @@ function ComplaintForm() {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
+  // ── photo select ──────────────────────────────────────
+  const handlePhotoChange = (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+
+    if (file.size > 5 * 1024 * 1024) {
+      setError('Photo size must be less than 5MB'); return;
+    }
+    const allowed = ['image/jpeg', 'image/png', 'image/jpg', 'image/webp'];
+    if (!allowed.includes(file.type)) {
+      setError('Only JPG, PNG, or WEBP images are allowed'); return;
+    }
+    setError('');
+    setPhoto(file);
+    setPhotoPreview(URL.createObjectURL(file));
+  };
+
+  const removePhoto = () => {
+    setPhoto(null);
+    setPhotoPreview(null);
+    const inp = document.getElementById('photoInput');
+    if (inp) inp.value = '';
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError('');
@@ -33,18 +60,58 @@ function ComplaintForm() {
 
     const { title, category, department, description } = formData;
     if (!title || !category || !department || !description) {
-      setError('Please fill all fields');
+      setError('Please fill all required fields');
       return;
     }
 
     setLoading(true);
     try {
+      const data = new FormData();
+      data.append('title', title);
+      data.append('category', category);
+      data.append('department', department);
+      data.append('description', description);
+      if (photo) data.append('photo', photo);
+
+
+      // ── DEBUG — ye console mein dekho ──
+    console.log('API URL:', import.meta.env.VITE_API_URL);
+    console.log('User token:', user?.token);
+    console.log('FormData entries:');
+    for (let [key, val] of data.entries()) {
+      console.log(key, val);
+    }
+
+
+
+
       const config = { headers: { Authorization: `Bearer ${user.token}` } };
-      await axios.post(`${import.meta.env.VITE_API_URL}/api/complaints`, formData, config);
+
+      await axios.post(`${import.meta.env.VITE_API_URL}/api/complaints`, data, config);
+
+
+       console.log('Success response:', response.data);
+
+
+
+
       setSuccess('Complaint submitted successfully!');
       setFormData({ title: '', category: '', department: '', description: '' });
+
+      removePhoto();
+
       setTimeout(() => navigate('/student/complaints'), 1500);
+
     } catch (err) {
+
+
+
+      console.log('Error status:', err.response?.status);
+    console.log('Error message:', err.response?.data);
+
+
+
+    
       setError(err.response?.data?.message || 'Failed to submit complaint');
     }
     setLoading(false);
@@ -74,7 +141,7 @@ function ComplaintForm() {
 
             <form onSubmit={handleSubmit} className="complaint-form-body">
               <div className="form-group">
-                <label className="form-label">Complaint Title *</label>
+                <label className="form-label">Title *</label>
                 <input
                   type="text"
                   name="title"
@@ -115,6 +182,39 @@ function ComplaintForm() {
                 />
               </div>
 
+              {/* ── PHOTO UPLOAD FIELD ── */}
+              <div className="form-group">
+                <label className="form-label">
+                  Attach Photo&nbsp;
+                  <span style={{ color: '#999', fontWeight: 400 }}>(Optional — max 5MB)</span>
+                </label>
+
+                {!photoPreview ? (
+                  <label htmlFor="photoInput" className="photo-upload-box">
+                    <div className="photo-upload-icon">📷</div>
+                    <p className="photo-upload-text">Click to upload a photo</p>
+                    <p className="photo-upload-hint">JPG, PNG, WEBP • Max 5MB</p>
+                    <input
+                      id="photoInput" type="file" 
+                      accept="image/jpeg,image/png,image/jpg,image/webp"
+                      onChange={handlePhotoChange}
+                      style={{ display: 'none' }}
+                    />
+                  </label>
+                ) : (
+                  <div className="photo-preview-box">
+                    <img src={photoPreview} alt="Preview" className="photo-preview-img" />
+                    <div className="photo-preview-info">
+                      <span className="photo-preview-name">📎 {photo?.name}</span>
+                      <span className="photo-preview-size">{(photo?.size / 1024).toFixed(1)} KB</span>
+                    </div>
+                    <button type="button" className="photo-remove-btn" onClick={removePhoto}>
+                      ✕ Remove
+                    </button>
+                  </div>
+                )}
+              </div>
+              
               <div className="form-actions">
                 <button type="button" className="btn-secondary-outline" onClick={() => navigate('/student/dashboard')}>
                   Cancel

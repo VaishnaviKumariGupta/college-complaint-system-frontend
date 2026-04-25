@@ -74,26 +74,9 @@ function ComplaintForm() {
       if (photo) data.append('photo', photo);
 
 
-      // ── DEBUG — ye console mein dekho ──
-    console.log('API URL:', import.meta.env.VITE_API_URL);
-    console.log('User token:', user?.token);
-    console.log('FormData entries:');
-    for (let [key, val] of data.entries()) {
-      console.log(key, val);
-    }
-
-
-
-
       const config = { headers: { Authorization: `Bearer ${user.token}` } };
 
       await axios.post(`${import.meta.env.VITE_API_URL}/api/complaints`, data, config);
-
-
-       console.log('Success response:', response.data);
-
-
-
 
       setSuccess('Complaint submitted successfully!');
       setFormData({ title: '', category: '', department: '', description: '' });
@@ -103,15 +86,6 @@ function ComplaintForm() {
       setTimeout(() => navigate('/student/complaints'), 1500);
 
     } catch (err) {
-
-
-
-      console.log('Error status:', err.response?.status);
-    console.log('Error message:', err.response?.data);
-
-
-
-    
       setError(err.response?.data?.message || 'Failed to submit complaint');
     }
     setLoading(false);
